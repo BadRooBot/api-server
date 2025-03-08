@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>الإحصائيات البيانية</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dark-mode.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+  <div class="container">
+    <header class="my-4 d-flex justify-content-between align-items-center">
+      <div>
+        <h1 class="mb-0"><i class="fas fa-chart-line me-2"></i>الإحصائيات البيانية</h1>
+        <nav class="nav mt-2">
+          <a class="nav-link" href="/dashboard"><i class="fas fa-home me-1"></i>الرئيسية</a>
+          <a class="nav-link" href="/dashboard/settings"><i class="fas fa-cog me-1"></i>الإعدادات</a>
+          <a class="nav-link active" href="/dashboard/statistics"><i class="fas fa-chart-bar me-1"></i>الإحصائيات</a>
+        </nav>
+      </div>
+      <div class="d-none d-md-block">
+        <span class="badge bg-primary p-2"><i class="fas fa-code me-1"></i>إصدار <%= settings.app_version || '1.0.0' %></span>
+      </div>
+    </header>
+
+    <div class="card info-card mb-4">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h2 class="h5 mb-0"><i class="fas fa-filter me-2"></i>تصفية البيانات</h2>
+      </div>
+      <div class="card-body">
+        <form id="filterForm" class="row g-3">
+          <div class="col-md-4">
+            <label for="period" class="form-label"><i class="fas fa-calendar-alt me-1"></i>الفترة الزمنية</label>
+            <select class="form-select" id="period">
+              <option value="week">آخر أسبوع</option>
+              <option value="month" selected>آخر شهر</option>
+              <option value="3months">آخر 3 أشهر</option>
+              <option value="6months">آخر 6 أشهر</option>
+              <option value="year">آخر سنة</option>
+              <option value="custom">فترة مخصصة</option>
+            </select>
+          </div>
+          
+          <div class="col-md-4 custom-date-range d-none">
+            <label for="startDate" class="form-label"><i class="fas fa-calendar-day me-1"></i>من تاريخ</label>
+            <input type="text" class="form-control" id="startDate" placeholder="اختر تاريخ البداية">
+          </div>
+          
+          <div class="col-md-4 custom-date-range d-none">
+            <label for="endDate" class="form-label"><i class="fas fa-calendar-day me-1"></i>إلى تاريخ</label>
+            <input type="text" class="form-control" id="endDate" placeholder="اختر تاريخ النهاية">
+          </div>
+          
+          <div class="col-md-4">
+            <label for="groupBy" class="form-label"><i class="fas fa-layer-group me-1"></i>تجميع حسب</label>
+            <select class="form-select" id="groupBy">
+              <option value="day">يوم</option>
+              <option value="week">أسبوع</option>
+              <option value="month">شهر</option>
+            </select>
+          </div>
+          
+          <div class="col-md-4">
+            <label for="chartType" class="form-label"><i class="fas fa-chart-bar me-1"></i>نوع الرسم البياني</label>
+            <select class="form-select" id="chartType">
+              <option value="line">خط بياني</option>
+              <option value="bar">أعمدة</option>
+              <option value="area">مساحة</option>
+            </select>
+          </div>
+          
+          <div class="col-12 mt-3">
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-search me-1"></i>عرض البيانات
+            </button>
+            <button type="button" id="exportData" class="btn btn-success ms-2">
+              <i class="fas fa-file-export me-1"></i>تصدير البيانات
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="card info-card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h2 class="h5 mb-0"><i class="fas fa-chart-line me-2"></i>عدد الزيارات</h2>
+        <div>
+          <span class="badge bg-info" id="totalVisits">0</span>
+          <span class="text-muted me-2">إجمالي الزيارات</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="chart-container" style="position: relative; height:400px;">
+          <canvas id="visitsChart"></canvas>
+        </div>
+        <div class="text-center mt-3 d-none" id="noDataMessage">
+          <i class="fas fa-exclamation-circle fa-3x mb-3 text-muted"></i>
+          <p>لا توجد بيانات للعرض في الفترة المحددة</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ar.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+  <script src="/js/dark-mode.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // تهيئة منتقي التاريخ
+      const startDatePicker = flatpickr("#startDate", {
+        locale: "ar",
+        dateFormat: "Y-m-d",
+        maxDate: "today"
+      });
+      
+      const endDatePicker = flatpickr("#endDate", {
+        locale: "ar",
+        dateFormat: "Y-m-d",
+        maxDate: "today"
+      });
+      
+      // إظهار/إخفاء حقول التاريخ المخصصة
+      document.getElementById('period').addEventListener('change', function() {
+        const customDateFields = document.querySelectorAll('.custom-date-range');
+        if (this.value === 'custom') {
+          customDateFields.forEach(field => field.classList.remove('d-none'));
+        } else {
+          customDateFields.forEach(field => field.classList.add('d-none'));
+        }
+      });
+      
+      // تهيئة الرسم البياني
+      const ctx = document.getElementById('visitsChart').getContext('2d');
+      let visitsChart;
+      
+      // دالة لتحديث الرسم البياني
+      function updateChart(data) {
+        // تحديث إجمالي الزيارات
+        const totalVisits = data.reduce((sum, item) => sum + item.count, 0);
+        document.getElementById('totalVisits').textContent = totalVisits;
+        
+        // إظهار رسالة عدم وجود بيانات إذا كانت البيانات فارغة
+        if (data.length === 0) {
+          document.getElementById('noDataMessage').classList.remove('d-none');
+          return;
+        } else {
+          document.getElementById('noDataMessage').classList.add('d-none');
+        }
+        
+        // تحديد نوع الرسم البياني
+        const chartType = document.getElementById('chartType').value;
+        
+        // إعداد البيانات للرسم البياني
+        const labels = data.map(item => item.date);
+        const counts = data.map(item => item.count);
+        
+        // تدمير الرسم البياني السابق إذا كان موجودًا
+        if (visitsChart) {
+          visitsChart.destroy();
+        }
+        
+        // إنشاء الرسم البياني الجديد
+        visitsChart = new Chart(ctx, {
+          type: chartType === 'area' ? 'line' : chartType,
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'عدد الزيارات',
+              data: counts,
+              backgroundColor: 'rgba(187, 134, 252, 0.2)',
+              borderColor: 'rgba(187, 134, 252, 1)',
+              borderWidth: 2,
+              pointBackgroundColor: 'rgba(187, 134, 252, 1)',
+              pointBorderColor: '#fff',
+              pointHoverBackgroundColor: '#fff',
+              pointHoverBorderColor: 'rgba(187, 134, 252, 1)',
+              fill: chartType === 'area' ? true : false
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: true,
+                position: 'top',
+                labels: {
+                  font: {
+                    family: 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif'
+                  }
+                }
+              },
+              tooltip: {
+                mode: 'index',
+                intersect: false,
+                callbacks: {
+                  label: function(context) {
+                    return `عدد الزيارات: ${context.parsed.y}`;
+                  }
+                }
+              }
+            },
+            scales: {
+              x: {
+                grid: {
+                  display: false
+                },
+                title: {
+                  display: true,
+                  text: 'التاريخ',
+                  font: {
+                    family: 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif',
+                    size: 14
+                  }
+                }
+              },
+              y: {
+                beginAtZero: true,
+                grid: {
+                  borderDash: [2, 4]
+                },
+                title: {
+                  display: true,
+                  text: 'عدد الزيارات',
+                  font: {
+                    family: 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif',
+                    size: 14
+                  }
+                }
+              }
+            }
+          }
+        });
+        
+        // تطبيق نمط الوضع المظلم على الرسم البياني إذا كان مفعلاً
+        applyChartTheme();
+      }
+      
+      // دالة لتطبيق نمط الوضع المظلم على الرسم البياني
+      function applyChartTheme() {
+        if (document.body.classList.contains('dark-mode') && visitsChart) {
+          const options = visitsChart.options;
+          options.scales.x.grid.color = 'rgba(255, 255, 255, 0.1)';
+          options.scales.y.grid.color = 'rgba(255, 255, 255, 0.1)';
+          options.scales.x.ticks.color = '#cccccc';
+          options.scales.y.ticks.color = '#cccccc';
+          options.scales.x.title.color = '#ffffff';
+          options.scales.y.title.color = '#ffffff';
+          options.plugins.legend.labels.color = '#ffffff';
+          visitsChart.update();
+        }
+      }
+      
+      // استمع لتغييرات الوضع المظلم
+      document.addEventListener('themeChanged', function(e) {
+        applyChartTheme();
+      });
+      
+      // معالجة نموذج التصفية
+      document.getElementById('filterForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const period = document.getElementById('period').value;
+        const groupBy = document.getElementById('groupBy').value;
+        let startDate = '';
+        let endDate = '';
+        
+        // تحديد تواريخ البداية والنهاية بناءً على الفترة المحددة
+        if (period === 'custom') {
+          startDate = document.getElementById('startDate').value;
+          endDate = document.getElementById('endDate').value;
+          
+          if (!startDate || !endDate) {
+            alert('يرجى تحديد تاريخ البداية والنهاية');
+            return;
+          }
+        } else {
+          const today = new Date();
+          endDate = formatDate(today);
+          
+          switch (period) {
+            case 'week':
+              const weekAgo = new Date();
+              weekAgo.setDate(today.getDate() - 7);
+              startDate = formatDate(weekAgo);
+              break;
+            case 'month':
+              const monthAgo = new Date();
+              monthAgo.setMonth(today.getMonth() - 1);
+              startDate = formatDate(monthAgo);
+              break;
+            case '3months':
+              const threeMonthsAgo = new Date();
+              threeMonthsAgo.setMonth(today.getMonth() - 3);
+              startDate = formatDate(threeMonthsAgo);
+              break;
+            case '6months':
+              const sixMonthsAgo = new Date();
+              sixMonthsAgo.setMonth(today.getMonth() - 6);
+              startDate = formatDate(sixMonthsAgo);
+              break;
+            case 'year':
+              const yearAgo = new Date();
+              yearAgo.setFullYear(today.getFullYear() - 1);
+              startDate = formatDate(yearAgo);
+              break;
+          }
+        }
+        
+        // جلب البيانات من الخادم
+        fetch(`/api/statistics?startDate=${startDate}&endDate=${endDate}&groupBy=${groupBy}`)
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              updateChart(data.statistics);
+            } else {
+              alert('حدث خطأ أثناء جلب البيانات');
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            alert('حدث خطأ أثناء الاتصال بالخادم');
+          });
+      });
+      
+      // دالة لتنسيق التاريخ بصيغة YYYY-MM-DD
+      function formatDate(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      }
+      
+      // تصدير البيانات
+      document.getElementById('exportData').addEventListener('click', function() {
+        if (!visitsChart || !visitsChart.data.labels.length) {
+          alert('لا توجد بيانات للتصدير');
+          return;
+        }
+        
+        const labels = visitsChart.data.labels;
+        const data = visitsChart.data.datasets[0].data;
+        
+        let csvContent = "التاريخ,عدد الزيارات\n";
+        
+        for (let i = 0; i < labels.length; i++) {
+          csvContent += `${labels[i]},${data[i]}\n`;
+        }
+        
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.setAttribute('href', url);
+        link.setAttribute('download', `إحصائيات_الزيارات_${formatDate(new Date())}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      });
+      
+      // تحميل البيانات الافتراضية عند تحميل الصفحة (آخر شهر)
+      document.getElementById('filterForm').dispatchEvent(new Event('submit'));
+    });
+  </script>
+</body>
+</html> 

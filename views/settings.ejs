@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إعدادات التطبيق</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dark-mode.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+  <div class="container">
+    <header class="my-4 d-flex justify-content-between align-items-center">
+      <div>
+        <h1 class="mb-0"><i class="fas fa-cog me-2"></i>إعدادات التطبيق</h1>
+        <nav class="nav mt-2">
+          <a class="nav-link" href="/dashboard"><i class="fas fa-home me-1"></i>الرئيسية</a>
+          <a class="nav-link active" href="/dashboard/settings"><i class="fas fa-cog me-1"></i>الإعدادات</a>
+          <a class="nav-link" href="/dashboard/statistics"><i class="fas fa-chart-bar me-1"></i>الإحصائيات</a>
+        </nav>
+      </div>
+      <div class="d-none d-md-block">
+        <span class="badge bg-primary p-2"><i class="fas fa-code me-1"></i>إصدار <%= settings.app_version || '1.0.0' %></span>
+      </div>
+    </header>
+
+    <div class="card info-card">
+      <div class="card-header">
+        <h2 class="h5 mb-0"><i class="fas fa-sliders-h me-2"></i>تخصيص الإعدادات</h2>
+      </div>
+      <div class="card-body">
+        <form id="settingsForm">
+          <div class="mb-4">
+            <label for="app_version" class="form-label"><i class="fas fa-code-branch me-1"></i>إصدار التطبيق</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-tag"></i></span>
+              <input type="text" class="form-control" id="app_version" name="app_version" value="<%= settings.app_version || '' %>" placeholder="أدخل إصدار التطبيق" required>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label for="ai_model" class="form-label"><i class="fas fa-robot me-1"></i>نموذج الذكاء الاصطناعي</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-microchip"></i></span>
+              <input type="text" class="form-control" id="ai_model" name="ai_model" value="<%= settings.ai_model || '' %>" placeholder="أدخل نموذج الذكاء الاصطناعي" required>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label"><i class="fas fa-database me-1"></i>إعدادات التسجيل</label>
+            <div class="form-check form-switch mb-3">
+              <input class="form-check-input" type="checkbox" id="log_requests" <%= settings.log_requests ? 'checked' : '' %>>
+              <label class="form-check-label" for="log_requests">تسجيل طلبات API</label>
+            </div>
+            <small class="text-muted d-block mb-3">
+              <i class="fas fa-info-circle me-1"></i>
+              عند تفعيل هذا الخيار، سيتم تسجيل جميع طلبات API التي تأتي من التطبيق. لن يتم تسجيل الطلبات التي تأتي من لوحة التحكم.
+            </small>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label"><i class="fas fa-network-wired me-1"></i>نماذج OpenRouter</label>
+            <div id="openrouter-container">
+              <% (settings.openrouter || []).forEach(function(model, index) { %>
+                <div class="input-group mb-2">
+                  <span class="input-group-text"><i class="fas fa-cube"></i></span>
+                  <input type="text" class="form-control openrouter-model" value="<%= model %>" placeholder="أدخل نموذج OpenRouter">
+                  <button type="button" class="btn btn-danger remove-model" title="حذف النموذج"><i class="fas fa-trash-alt"></i></button>
+                </div>
+              <% }); %>
+              <% if ((settings.openrouter || []).length === 0) { %>
+                <div class="input-group mb-2">
+                  <span class="input-group-text"><i class="fas fa-cube"></i></span>
+                  <input type="text" class="form-control openrouter-model" placeholder="أدخل نموذج OpenRouter">
+                  <button type="button" class="btn btn-danger remove-model" title="حذف النموذج"><i class="fas fa-trash-alt"></i></button>
+                </div>
+              <% } %>
+            </div>
+            <button type="button" id="add-openrouter" class="btn btn-secondary mt-2">
+              <i class="fas fa-plus me-1"></i>إضافة نموذج
+            </button>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label"><i class="fas fa-brain me-1"></i>نماذج HuggingFace</label>
+            <div id="huggingface-container">
+              <% (settings.huggingface || []).forEach(function(model, index) { %>
+                <div class="input-group mb-2">
+                  <span class="input-group-text"><i class="fas fa-cube"></i></span>
+                  <input type="text" class="form-control huggingface-model" value="<%= model %>" placeholder="أدخل نموذج HuggingFace">
+                  <button type="button" class="btn btn-danger remove-model" title="حذف النموذج"><i class="fas fa-trash-alt"></i></button>
+                </div>
+              <% }); %>
+              <% if ((settings.huggingface || []).length === 0) { %>
+                <div class="input-group mb-2">
+                  <span class="input-group-text"><i class="fas fa-cube"></i></span>
+                  <input type="text" class="form-control huggingface-model" placeholder="أدخل نموذج HuggingFace">
+                  <button type="button" class="btn btn-danger remove-model" title="حذف النموذج"><i class="fas fa-trash-alt"></i></button>
+                </div>
+              <% } %>
+            </div>
+            <button type="button" id="add-huggingface" class="btn btn-secondary mt-2">
+              <i class="fas fa-plus me-1"></i>إضافة نموذج
+            </button>
+          </div>
+
+          <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <a href="/dashboard" class="btn btn-outline-secondary me-md-2">
+              <i class="fas fa-times me-1"></i>إلغاء
+            </a>
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-save me-1"></i>حفظ الإعدادات
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/dark-mode.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // إضافة نموذج OpenRouter
+      document.getElementById('add-openrouter').addEventListener('click', function() {
+        const container = document.getElementById('openrouter-container');
+        const div = document.createElement('div');
+        div.className = 'input-group mb-2';
+        div.innerHTML = `
+          <span class="input-group-text"><i class="fas fa-cube"></i></span>
+          <input type="text" class="form-control openrouter-model" placeholder="أدخل نموذج OpenRouter">
+          <button type="button" class="btn btn-danger remove-model" title="حذف النموذج"><i class="fas fa-trash-alt"></i></button>
+        `;
+        container.appendChild(div);
+      });
+
+      // إضافة نموذج HuggingFace
+      document.getElementById('add-huggingface').addEventListener('click', function() {
+        const container = document.getElementById('huggingface-container');
+        const div = document.createElement('div');
+        div.className = 'input-group mb-2';
+        div.innerHTML = `
+          <span class="input-group-text"><i class="fas fa-cube"></i></span>
+          <input type="text" class="form-control huggingface-model" placeholder="أدخل نموذج HuggingFace">
+          <button type="button" class="btn btn-danger remove-model" title="حذف النموذج"><i class="fas fa-trash-alt"></i></button>
+        `;
+        container.appendChild(div);
+      });
+
+      // حذف نموذج
+      document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('remove-model') || e.target.closest('.remove-model')) {
+          const parent = e.target.closest('.input-group');
+          if (parent.parentElement.children.length > 1) {
+            parent.remove();
+          } else {
+            const input = parent.querySelector('input');
+            input.value = '';
+          }
+        }
+      });
+
+      // إرسال النموذج
+      document.getElementById('settingsForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // جمع البيانات
+        const app_version = document.getElementById('app_version').value;
+        const ai_model = document.getElementById('ai_model').value;
+        const log_requests = document.getElementById('log_requests').checked;
+        
+        const openrouterInputs = document.querySelectorAll('.openrouter-model');
+        const openrouter = Array.from(openrouterInputs)
+          .map(input => input.value.trim())
+          .filter(value => value !== '');
+        
+        const huggingfaceInputs = document.querySelectorAll('.huggingface-model');
+        const huggingface = Array.from(huggingfaceInputs)
+          .map(input => input.value.trim())
+          .filter(value => value !== '');
+        
+        // إظهار مؤشر التحميل
+        const submitBtn = document.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>جاري الحفظ...';
+        submitBtn.disabled = true;
+        
+        // إرسال البيانات إلى API
+        fetch('/api/settings', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'same-origin',
+          body: JSON.stringify({
+            app_version,
+            ai_model,
+            openrouter,
+            huggingface,
+            log_requests
+          }),
+        })
+        .then(response => response.json())
+        .then(data => {
+          // إعادة زر الإرسال إلى حالته الأصلية
+          submitBtn.innerHTML = originalBtnText;
+          submitBtn.disabled = false;
+          
+          if (data.success) {
+            // إنشاء إشعار نجاح
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'alert alert-success alert-dismissible fade show mt-3';
+            alertDiv.innerHTML = `
+              <i class="fas fa-check-circle me-2"></i>تم حفظ الإعدادات بنجاح
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `;
+            document.querySelector('.card-body').prepend(alertDiv);
+            
+            // إعادة التوجيه بعد ثانيتين
+            setTimeout(() => {
+              window.location.href = '/dashboard';
+            }, 2000);
+          } else {
+            // إنشاء إشعار خطأ
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'alert alert-danger alert-dismissible fade show mt-3';
+            alertDiv.innerHTML = `
+              <i class="fas fa-exclamation-circle me-2"></i>حدث خطأ أثناء حفظ الإعدادات
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `;
+            document.querySelector('.card-body').prepend(alertDiv);
+          }
+        })
+        .catch(error => {
+          // إعادة زر الإرسال إلى حالته الأصلية
+          submitBtn.innerHTML = originalBtnText;
+          submitBtn.disabled = false;
+          
+          console.error('Error:', error);
+          // إنشاء إشعار خطأ
+          const alertDiv = document.createElement('div');
+          alertDiv.className = 'alert alert-danger alert-dismissible fade show mt-3';
+          alertDiv.innerHTML = `
+            <i class="fas fa-exclamation-circle me-2"></i>حدث خطأ أثناء حفظ الإعدادات
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          `;
+          document.querySelector('.card-body').prepend(alertDiv);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

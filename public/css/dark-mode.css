@@ -1,0 +1,281 @@
+:root {
+  --dark-bg: #121212;
+  --dark-surface: #1e1e1e;
+  --dark-surface-2: #2d2d2d;
+  --dark-text: #ffffff;
+  --dark-text-secondary: #cccccc;
+  --dark-border: #444444;
+  --dark-primary: #bb86fc;
+  --dark-primary-variant: #3700b3;
+  --dark-secondary: #03dac6;
+  --dark-error: #cf6679;
+  --dark-badge-bg: #444444;
+  --dark-input-bg: #333333;
+  --dark-input-text: #ffffff;
+  --dark-input-placeholder: #aaaaaa;
+  --dark-btn-danger: #e53935;
+  --dark-btn-danger-hover: #f44336;
+}
+
+body.dark-mode {
+  background-color: var(--dark-bg);
+  color: var(--dark-text);
+}
+
+.dark-mode .container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.dark-mode header {
+  border-bottom: 1px solid var(--dark-border);
+  padding-bottom: 1rem;
+}
+
+.dark-mode .card {
+  background-color: var(--dark-surface);
+  border-color: var(--dark-border);
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.2);
+}
+
+.dark-mode .card-header {
+  background-color: var(--dark-surface-2);
+  border-bottom: 1px solid var(--dark-border);
+  color: var(--dark-text);
+}
+
+.dark-mode .nav-link {
+  color: var(--dark-text-secondary);
+}
+
+.dark-mode .nav-link:hover {
+  color: var(--dark-primary);
+}
+
+.dark-mode .nav-link.active {
+  font-weight: bold;
+  color: var(--dark-primary);
+}
+
+.dark-mode table {
+  color: var(--dark-text);
+}
+
+.dark-mode .table {
+  color: var(--dark-text);
+}
+
+.dark-mode .table-striped > tbody > tr:nth-of-type(odd) {
+  background-color: var(--dark-surface-2);
+}
+
+/* تحسين حقول الإدخال في الوضع المظلم */
+.dark-mode .form-control {
+  background-color: var(--dark-input-bg);
+  border-color: var(--dark-border);
+  color: var(--dark-input-text);
+  box-shadow: none;
+}
+
+.dark-mode .form-control:focus {
+  background-color: var(--dark-input-bg);
+  color: var(--dark-input-text);
+  border-color: var(--dark-primary);
+  box-shadow: 0 0 0 0.25rem rgba(187, 134, 252, 0.25);
+}
+
+.dark-mode .form-control::placeholder {
+  color: var(--dark-input-placeholder);
+  opacity: 1;
+}
+
+.dark-mode .input-group-text {
+  background-color: var(--dark-surface-2);
+  border-color: var(--dark-border);
+  color: var(--dark-text);
+}
+
+/* تحسين الأزرار في الوضع المظلم */
+.dark-mode .btn-primary {
+  background-color: var(--dark-primary);
+  border-color: var(--dark-primary);
+  color: #000;
+}
+
+.dark-mode .btn-primary:hover {
+  background-color: var(--dark-primary-variant);
+  border-color: var(--dark-primary-variant);
+  color: #fff;
+}
+
+.dark-mode .btn-secondary {
+  background-color: var(--dark-surface-2);
+  border-color: var(--dark-border);
+  color: var(--dark-text);
+}
+
+.dark-mode .btn-secondary:hover {
+  background-color: #444444;
+  border-color: #555555;
+}
+
+.dark-mode .btn-danger {
+  background-color: var(--dark-btn-danger);
+  border-color: var(--dark-btn-danger);
+  color: #ffffff;
+}
+
+.dark-mode .btn-danger:hover {
+  background-color: var(--dark-btn-danger-hover);
+  border-color: var(--dark-btn-danger-hover);
+}
+
+.dark-mode .btn-outline-secondary {
+  color: var(--dark-text);
+  border-color: var(--dark-border);
+}
+
+.dark-mode .btn-outline-secondary:hover {
+  background-color: var(--dark-surface-2);
+  color: var(--dark-text);
+}
+
+.dark-mode .btn-info {
+  background-color: var(--dark-secondary);
+  border-color: var(--dark-secondary);
+  color: #000;
+}
+
+.dark-mode .text-center {
+  color: var(--dark-text-secondary);
+}
+
+/* تحسين وضوح النصوص في الوضع المظلم */
+.dark-mode .badge {
+  font-weight: 600;
+}
+
+.dark-mode .badge.bg-info {
+  background-color: #17a2b8 !important;
+  color: #ffffff !important;
+}
+
+.dark-mode .badge.bg-primary {
+  background-color: #0d6efd !important;
+  color: #ffffff !important;
+}
+
+.dark-mode .badge.bg-success {
+  background-color: #28a745 !important;
+  color: #ffffff !important;
+}
+
+.dark-mode .badge.bg-warning {
+  background-color: #ffc107 !important;
+  color: #000000 !important;
+  font-weight: 700;
+}
+
+.dark-mode .badge.bg-secondary {
+  background-color: #6c757d !important;
+  color: #ffffff !important;
+}
+
+.dark-mode .badge.badge-count {
+  background-color: #0d6efd !important;
+  color: #ffffff !important;
+}
+
+.dark-mode code {
+  background-color: var(--dark-badge-bg);
+  color: #e83e8c;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.25rem;
+}
+
+.dark-mode strong {
+  color: var(--dark-text);
+  font-weight: 600;
+}
+
+/* تحسين الإشعارات في الوضع المظلم */
+.dark-mode .alert-success {
+  background-color: rgba(40, 167, 69, 0.2);
+  border-color: rgba(40, 167, 69, 0.3);
+  color: #ffffff;
+}
+
+.dark-mode .alert-danger {
+  background-color: rgba(220, 53, 69, 0.2);
+  border-color: rgba(220, 53, 69, 0.3);
+  color: #ffffff;
+}
+
+.dark-mode .alert .btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+/* Dark mode toggle button */
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  background-color: var(--dark-surface-2);
+  border: 1px solid var(--dark-border);
+  color: var(--dark-text);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+  transform: scale(1.1);
+}
+
+.theme-toggle-tooltip {
+  position: absolute;
+  right: 50px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 14px;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.theme-toggle:hover .theme-toggle-tooltip {
+  opacity: 1;
+}
+
+body:not(.dark-mode) .theme-toggle {
+  background-color: #f8f9fa;
+  border-color: #dee2e6;
+  color: #212529;
+}
+
+/* Custom scrollbar for dark mode */
+.dark-mode ::-webkit-scrollbar {
+  width: 10px;
+}
+
+.dark-mode ::-webkit-scrollbar-track {
+  background: var(--dark-surface);
+}
+
+.dark-mode ::-webkit-scrollbar-thumb {
+  background: var(--dark-surface-2);
+  border-radius: 5px;
+}
+
+.dark-mode ::-webkit-scrollbar-thumb:hover {
+  background: var(--dark-primary);
+} 
