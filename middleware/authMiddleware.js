@@ -40,7 +40,8 @@ function authMiddleware(req, res, next) {
   
   // إذا كان الطلب لمسار API، إرجاع خطأ 401
   if (req.path.startsWith('/api')) {
-    return res.status(401).json({ error: 'Unauthorized access' });
+    return apiAuthMiddleware(req, res, next);
+    // return res.status(401).json({ error: 'Unauthorized access' });
   }
   
   // إذا لم يكن هناك مصادقة، إعادة توجيه إلى صفحة تسجيل الدخول
@@ -52,7 +53,7 @@ function apiAuthMiddleware(req, res, next) {
   console.log(`[API AUTH] Checking auth for path: ${req.path}, method: ${req.method}`);
   
   // السماح بالوصول إلى مسار API المحدد
-  if (req.path === '/settings' && req.method === 'GET') {
+  if (req.path === '/api/settings' && req.method === 'GET') {
     console.log(`[API AUTH] Public API endpoint, access granted`);
     return next();
   }

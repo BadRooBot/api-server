@@ -18,7 +18,7 @@ exports.getSettings = (req, res) => {
 
 // تحديث الإعدادات
 exports.updateSettings = (req, res) => {
-  const { openrouter, ai_model, huggingface, app_version, log_requests } = req.body;
+  const { openrouter, ai_model, gemini_model,huggingface, app_version, log_requests } = req.body;
   
   // التحقق من صحة البيانات
   if (!Array.isArray(openrouter) || !Array.isArray(huggingface)) {
@@ -37,6 +37,7 @@ exports.updateSettings = (req, res) => {
   Settings.update({ 
     openrouter, 
     ai_model, 
+    gemini_model,
     huggingface, 
     app_version, 
     log_requests: log_requests === undefined ? true : log_requests 

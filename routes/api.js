@@ -14,8 +14,9 @@ router.get('/settings', apiController.getSettings);
 
 // تطبيق وسيط المصادقة على باقي مسارات API
 router.use((req, res, next) => {
+  console.log(req.path);
   // استثناء مسار GET /settings
-  if (req.path === '/settings' && req.method === 'GET') {
+  if (req.path === '/api/settings' && req.method === 'GET') {
     console.log('[API ROUTER] Skipping auth for public API endpoint');
     return next();
   }

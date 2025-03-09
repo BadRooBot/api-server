@@ -49,6 +49,14 @@
           </div>
 
           <div class="mb-4">
+            <label for="gemini_model" class="form-label"><i class="fas fa-gem me-1"></i>نموذج Gemini</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-brain"></i></span>
+              <input type="text" class="form-control" id="gemini_model" name="gemini_model" value="<%= settings.gemini_model || '' %>" placeholder="أدخل نموذج Gemini">
+            </div>
+          </div>
+
+          <div class="mb-4">
             <label class="form-label"><i class="fas fa-database me-1"></i>إعدادات التسجيل</label>
             <div class="form-check form-switch mb-3">
               <input class="form-check-input" type="checkbox" id="log_requests" <%= settings.log_requests ? 'checked' : '' %>>
@@ -169,6 +177,7 @@
         // جمع البيانات
         const app_version = document.getElementById('app_version').value;
         const ai_model = document.getElementById('ai_model').value;
+        const gemini_model = document.getElementById('gemini_model').value;
         const log_requests = document.getElementById('log_requests').checked;
         
         const openrouterInputs = document.querySelectorAll('.openrouter-model');
@@ -197,6 +206,7 @@
           body: JSON.stringify({
             app_version,
             ai_model,
+            gemini_model,
             openrouter,
             huggingface,
             log_requests

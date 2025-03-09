@@ -20,6 +20,7 @@ db.serialize(() => {
       id INTEGER PRIMARY KEY,
       openrouter TEXT,
       ai_model TEXT,
+      gemini_model TEXT,
       huggingface TEXT,
       app_version TEXT,
       log_requests BOOLEAN DEFAULT 1,
@@ -50,11 +51,12 @@ db.serialize(() => {
     
     if (row.count === 0) {
       db.run(`
-        INSERT INTO settings (openrouter, ai_model, huggingface, app_version, log_requests)
-        VALUES (?, ?, ?, ?, ?)
+        INSERT INTO settings (openrouter, ai_model, gemini_model,huggingface, app_version, log_requests)
+        VALUES (?, ?, ?, ?, ?, ?)
       `, [
         JSON.stringify([]),
         '',
+        'gemini-1.5-flash',
         JSON.stringify([]),
         '1.0.0',
         1

@@ -27,6 +27,7 @@ class Settings {
           openrouter: [],
           huggingface: [],
           ai_model: '',
+          gemini_model: '',
           app_version: '1.0.0',
           log_requests: true
         };
@@ -38,7 +39,7 @@ class Settings {
 
   // تحديث الإعدادات
   static update(settings, callback) {
-    const { openrouter, ai_model, huggingface, app_version, log_requests } = settings;
+    const { openrouter, ai_model, gemini_model, huggingface, app_version, log_requests } = settings;
     
     // تحويل المصفوفات إلى نصوص JSON
     let openrouterJson, huggingfaceJson;
@@ -57,9 +58,9 @@ class Settings {
     
     db.run(`
       UPDATE settings 
-      SET openrouter = ?, ai_model = ?, huggingface = ?, app_version = ?, log_requests = ?, updated_at = CURRENT_TIMESTAMP
+      SET openrouter = ?, ai_model = ?, gemini_model = ?, huggingface = ?, app_version = ?, log_requests = ?, updated_at = CURRENT_TIMESTAMP
       WHERE id = 1
-    `, [openrouterJson, ai_model, huggingfaceJson, app_version, shouldLogRequests ? 1 : 0], function(err) {
+    `, [openrouterJson, ai_model, gemini_model, huggingfaceJson, app_version, shouldLogRequests ? 1 : 0], function(err) {
       if (err) {
         return callback(err, null);
       }

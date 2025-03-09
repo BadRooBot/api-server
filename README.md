@@ -55,6 +55,7 @@ POST /api/settings
 {
   "openrouter": ["model1", "model2"],
   "ai_model": "gpt-4",
+  "gemini_model": "gemini-1.5-flash",
   "huggingface": ["model4", "model5"],
   "app_version": "1.0.0"
 }

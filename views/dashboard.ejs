@@ -55,6 +55,16 @@
             
             <div class="mb-3">
               <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="app-info-label"><i class="fas fa-gem me-2"></i><strong>نموذج Gemini:</strong></span>
+                <span class="badge bg-info app-info-value"><%= settings.gemini_model || 'غير محدد' %></span>
+              </div>
+              <div class="progress" style="height: 5px;">
+                <div class="progress-bar bg-info progress-bar-100 animated-progress" role="progressbar"></div>
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <div class="d-flex justify-content-between align-items-center mb-2">
                 <span class="app-info-label"><i class="fas fa-network-wired me-2"></i><strong>نماذج OpenRouter:</strong></span>
                 <span class="badge bg-success app-info-value"><%= (settings.openrouter || []).length %></span>
               </div>
