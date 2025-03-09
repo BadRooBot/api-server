@@ -2,8 +2,8 @@ const { generateToken } = require('../middleware/authMiddleware');
 
 // بيانات المستخدم (في التطبيق الحقيقي، يجب تخزين هذه البيانات في قاعدة البيانات)
 // يجب تغيير اسم المستخدم وكلمة المرور في بيئة الإنتاج
-const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin';
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
+const ADMIN_USERNAME = process.env.ADMIN_USERNAME ;
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ;
 
 // عرض صفحة تسجيل الدخول
 exports.showLoginPage = (req, res) => {

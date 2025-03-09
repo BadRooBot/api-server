@@ -30,13 +30,26 @@ cd api-server
 npm install
 ```
 
-3. تشغيل السيرفر:
+3. إعداد ملف البيئة:
+
+قم بإنشاء ملف `.env` في المجلد الرئيسي للمشروع وأضف المتغيرات التالية:
+
+```
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=securepassword
+PORT=3000
+NODE_ENV=development
+```
+
+قم بتغيير قيم `ADMIN_USERNAME` و `ADMIN_PASSWORD` إلى قيم آمنة خاصة بك.
+
+4. تشغيل السيرفر:
 
 ``` bash
 npm start
 ```
 
-4. فتح المتصفح والوصول إلى لوحة التحكم:
+5. فتح المتصفح والوصول إلى لوحة التحكم:
 
 http://localhost:3000/dashboard
 
